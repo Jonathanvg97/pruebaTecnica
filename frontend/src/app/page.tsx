@@ -72,7 +72,7 @@ export default function HomePage() {
 
       {/* Drawer del carrito */}
       <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-80 bg-white shadow-lg transform transition-transform duration-300 z-50 ${
+        className={`fixed top-0 right-0 h-full w-full sm:w-90 bg-white shadow-lg transform transition-transform duration-300 z-50 ${
           isCartOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -84,7 +84,9 @@ export default function HomePage() {
             Cerrar carrito ✕
           </button>
         </div>
-        <div className="overflow-y-auto p-4 scroll-thin h-[calc(100%-60px)] ">
+
+        {/* Aquí el único scroll */}
+        <div className="overflow-y-auto p-4 scroll-thin h-[calc(100%-60px)]">
           <Cart cart={cart} onRemoveFromCart={handleDeleteProductFromCart} />
         </div>
       </div>
