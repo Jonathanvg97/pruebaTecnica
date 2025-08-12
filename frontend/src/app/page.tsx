@@ -1,103 +1,102 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useEffect, useState } from "react";
+import ProductList from "@/components/ProductList";
+import Cart from "@/components/Cart";
+import { useProducts } from "@/hooks/useProducts";
+import { IconShoppingCartPlus } from "@tabler/icons-react";
+import ProductCardSkeleton from "@/components/UI/ProductCardSkeleton";
+
+export default function HomePage() {
+  //
+  const {
+    getAllProducts,
+    products,
+    getAllProductsCart,
+    cart,
+    handleAddToCart,
+    loading,
+    handleDeleteProductFromCart,
+  } = useProducts();
+  //
+  const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
+
+  // Abrir carrito cuando se agrega un producto
+  const handleAddToCartAndOpen = (id: number) => {
+    handleAddToCart(id);
+    setIsCartOpen(true);
+  };
+
+  useEffect(() => {
+    getAllProducts();
+    getAllProductsCart();
+  }, [getAllProducts, getAllProductsCart]);
+  //
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <main className="h-screen mx-auto p-4 sm:p-6 overflow-hidden relative">
+      {/* Header */}
+      <header className="mb-6 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+        <div>
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-200">
+            🛒 Tienda Online
+          </h1>
+          <p className="mt-1 text-gray-300 text-sm sm:text-base">
+            Elige tus productos favoritos y agrégalos al carrito.
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+
+        <button
+          onClick={() => setIsCartOpen(true)}
+          className="flex items-center cursor-pointer justify-center gap-2 bg-blue-950 hover:bg-blue-900 text-white px-3 sm:px-4 py-2 rounded-lg transition-colors w-full sm:w-auto"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+          <IconShoppingCartPlus stroke={2} />
+          Ver carrito ({cart.length})
+        </button>
+      </header>
+
+      <h2 className="text-2xl font-extrabold tracking-tight flex items-center gap-2 pb-4">
+        🛍️ Productos Disponibles
+      </h2>
+
+      {/* Lista de productos */}
+      {loading ? (
+        <ProductCardSkeleton count={6} />
+      ) : (
+        <div className="overflow-y-auto pr-1 scroll-thin h-[calc(100%-80px)]">
+          <ProductList
+            products={products}
+            onAddToCart={handleAddToCartAndOpen}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        </div>
+      )}
+
+      {/* Drawer del carrito */}
+      <div
+        className={`fixed top-0 right-0 h-full w-full sm:w-80 bg-white shadow-lg transform transition-transform duration-300 z-50 ${
+          isCartOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="flex justify-between items-center p-4 border-b">
+          <button
+            onClick={() => setIsCartOpen(false)}
+            className="text-gray-600 cursor-pointer hover:text-gray-800 text-xl"
+          >
+            Cerrar carrito ✕
+          </button>
+        </div>
+        <div className="overflow-y-auto p-4 scroll-thin h-[calc(100%-60px)] ">
+          <Cart cart={cart} onRemoveFromCart={handleDeleteProductFromCart} />
+        </div>
+      </div>
+
+      {/* Fondo oscuro cuando el carrito está abierto */}
+      {isCartOpen && (
+        <button
+          onClick={() => setIsCartOpen(false)}
+          className="fixed inset-0 bg-black/50 z-40"
+          aria-label="Cerrar carrito"
+        />
+      )}
+    </main>
   );
 }

@@ -24,3 +24,27 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Scrollbar general */
+.scroll-thin {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #05064d transparent; /* Firefox */
+}
+
+/* Scrollbar en Webkit (Chrome, Edge, Safari) */
+.scroll-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scroll-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll-thin::-webkit-scrollbar-thumb {
+  background-color: #2d0370;
+  border-radius: 9999px;
+}
+
+.scroll-thin::-webkit-scrollbar-thumb:hover {
+  background-color: #3b82f6;
+}

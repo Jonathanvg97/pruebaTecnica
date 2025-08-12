@@ -25,3 +25,13 @@ export const addToCart = (req: Request, res: Response) => {
 export const getCart = (_req: Request, res: Response) => {
   return res.json(cart);
 };
+
+export const deleteProduct = (req: Request, res: Response) => {
+  const { id } = req.params;
+  const product = cart.find((p) => p.id === parseInt(id));
+  if (!product) {
+    return res.status(404).json({ message: "Producto no encontrado" });
+  }
+  cart = cart.filter((p) => p.id !== parseInt(id));
+  return res.json({ message: "Producto eliminado del carrito", cart });
+};

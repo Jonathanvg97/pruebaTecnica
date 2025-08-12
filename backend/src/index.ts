@@ -2,7 +2,7 @@ import cartRouter from "@routes/cart";
 import productsRouter from "@routes/products";
 import { app } from "server";
 
-const PORT = 3000;
+const PORT = 4000;
 
 // Rutas
 app.use("/products", productsRouter);
