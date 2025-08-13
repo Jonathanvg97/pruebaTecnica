@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { products } from "@utils/data/product";
-import { Product } from "@models/product";
+import { products } from "../utils/data/product";
+import { Product } from "../types/product";
 
 let cart: Product[] = [];
 

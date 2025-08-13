@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { envs } from "@utils/config/enviroments";
+import { envs } from "./utils/config/enviroments";
 
 export const app = express();
 

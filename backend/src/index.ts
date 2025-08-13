@@ -1,6 +1,6 @@
-import cartRouter from "@routes/cart";
-import productsRouter from "@routes/products";
-import { app } from "server";
+import productsRouter from "./routes/products";
+import cartRouter from "./routes/cart";
+import { app } from "./server";
 
 const PORT = 4000;
 
