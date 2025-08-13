@@ -107,6 +107,7 @@ git clone https://github.com/Jonathanvg97/pruebaTecnica.git
 
 - Ir a la carpeta del backend cd tu-repositorio/backend
 - npm i
+- Agregar las variables de entorno como esta en el .env.template
 
 ### Instalacón del Frontend
 
@@ -116,4 +117,8 @@ git clone https://github.com/Jonathanvg97/pruebaTecnica.git
 
 ## Contribuciones y Licensia
 
-- Realizado por Jonathan Vanegas
+Jonathan Vanegas
+
+GitHub: Jonathanvg97
+
+
