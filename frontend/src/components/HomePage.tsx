@@ -22,8 +22,8 @@ export default function HomePage() {
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [budget, setBudget] = useState<number | "">(150);
-  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [pendingBudget, setPendingBudget] = useState<number | "">(budget);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   // Calcular total carrito y presupuesto restante
   const totalCartPrice = cart.reduce((acc, p) => acc + p.price, 0);
@@ -44,24 +44,28 @@ export default function HomePage() {
     [handleAddToCart, remainingBudget]
   );
 
-  // Cambiar presupuesto y limpiar carrito
-  const handleBudgetChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const val = e.target.value;
-      if (val === "") {
-        setPendingBudget("");
-        setShowConfirmModal(true);
-      } else {
-        const num = Number(val);
-        if (!isNaN(num) && num >= 0) {
-          setPendingBudget(num);
-          setShowConfirmModal(true);
-        }
-      }
-    },
-    []
-  );
+  // Actualiza solo el input, sin modificar el presupuesto real ni limpiar carrito aún
+  const handlePendingBudgetChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const val = e.target.value;
+    const num = Number(val);
 
+    if (val === "") {
+      setPendingBudget("");
+    } else if (!isNaN(num)) {
+      setPendingBudget(num < 1 ? 1 : num);
+    }
+  };
+
+  const onClickModifyBudget = () => {
+    // Solo abrir modal si hay un cambio real
+    if (pendingBudget !== budget) {
+      setShowConfirmModal(true);
+    }
+  };
+
+  // Confirmación de cambio: limpiar carrito y actualizar presupuesto
   const confirmClearCartAndBudget = () => {
     clearCart();
     setBudget(pendingBudget);
@@ -105,20 +109,31 @@ export default function HomePage() {
         🛍️ Productos Disponibles
       </h2>
 
-      <div className="mt-2 text-gray-300 pb-4">
-        <label htmlFor="budget" className="block mt-2 text-gray-300">
+      <div className="mt-2 text-gray-300 pb-4 flex flex-wrap items-center gap-2">
+        <label htmlFor="budget" className="block text-gray-300 min-w-[140px]">
           Presupuesto máximo:
-          <input
-            id="budget"
-            type="number"
-            value={pendingBudget}
-            onChange={handleBudgetChange}
-            placeholder="0"
-            min={0}
-            className="ml-2 w-24 rounded bg-gray-700 bg-opacity-50 text-white placeholder-gray-400 px-3 py-1 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 disabled:cursor-not-allowed disabled:bg-gray-600"
-          />
         </label>
-        <p className="mt-1 text-sm text-gray-400">
+        <input
+          id="budget"
+          type="number"
+          value={pendingBudget}
+          onChange={handlePendingBudgetChange}
+          placeholder="1"
+          min={1}
+          className="w-24 min-w-[80px] rounded bg-gray-700 bg-opacity-50 text-white placeholder-gray-400 px-3 py-1 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 disabled:cursor-not-allowed disabled:bg-gray-600"
+        />
+        <button
+          onClick={onClickModifyBudget}
+          disabled={pendingBudget === budget}
+          className={`px-4 py-1 rounded font-semibold transition-colors duration-200 ${
+            pendingBudget === budget
+              ? "bg-gray-600 cursor-not-allowed"
+              : "bg-blue-950 hover:bg-blue-900 text-white"
+          }`}
+        >
+          Modificar presupuesto
+        </button>
+        <p className="w-full sm:w-auto mt-2 sm:mt-0 text-sm text-gray-400">
           Presupuesto restante: ${remainingBudget.toFixed(2)}
         </p>
       </div>
