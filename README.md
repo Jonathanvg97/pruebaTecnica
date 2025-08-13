@@ -103,7 +103,7 @@ Primero, clona el repositorio desde GitHub:
 
 git clone https://github.com/Jonathanvg97/pruebaTecnica.git
 
-### Instalacón del Backend
+### Instalación del Backend
 
 - Ir a la carpeta del backend cd tu-repositorio/backend
 - npm i
