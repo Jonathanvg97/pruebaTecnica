@@ -8,7 +8,6 @@ import ProductCardSkeleton from "@/components/UI/ProductCardSkeleton";
 import CartDrawer from "./CartDrawer";
 
 export default function HomePage() {
-  //
   const {
     getAllProducts,
     products,
@@ -17,23 +16,48 @@ export default function HomePage() {
     handleAddToCart,
     loading,
     handleDeleteProductFromCart,
+    clearCart,
   } = useProducts();
-  //
+  //Local states
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
+  const [budget, setBudget] = useState<number | "">(150);
+  //Handlers
+  // Calcular total carrito y presupuesto restante
+  const totalCartPrice = cart?.reduce((acc, p) => acc + p.price, 0);
+  const numericBudget = typeof budget === "number" ? budget : 0;
+  const remainingBudget = numericBudget - totalCartPrice;
+  // Filtrar productos que caben en el presupuesto restante
+  const filteredProducts = products.filter((p) => p.price <= remainingBudget);
 
-  // Abrir carrito cuando se agrega un producto
-  const handleAddToCartAndOpen = (id: number) => {
-    handleAddToCart(id);
-    setIsCartOpen(true);
+  // Handler para agregar producto validando presupuesto
+  const handleAddToCartAndOpen = (productId: number, productPrice: number) => {
+    if (productPrice <= remainingBudget) {
+      handleAddToCart(productId);
+      setIsCartOpen(true);
+    }
   };
 
+  const handleBudgetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (val === "") {
+      setBudget("");
+      clearCart(); // Vaciar carrito si presupuesto vacío
+    } else {
+      const num = Number(val);
+      if (!isNaN(num) && num >= 0) {
+        setBudget(num);
+        clearCart(); // Vaciar carrito cuando cambia presupuesto
+      }
+    }
+  };
+  //Effects
   useEffect(() => {
     getAllProducts();
     getAllProductsCart();
   }, [getAllProducts, getAllProductsCart]);
-  //
+  //UI
   return (
-    <section className="h-screen mx-auto p-4 sm:p-6 overflow-hidden relative">
+    <section className="h-screen mx-auto p-4 sm:p-6 overflow-hidden relative flex flex-col">
       {/* Header */}
       <header className="mb-6 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <div>
@@ -54,24 +78,56 @@ export default function HomePage() {
         </button>
       </header>
 
-      <h2 className="text-2xl font-extrabold tracking-tight flex items-center gap-2 pb-4">
+      <h2 className="text-2xl font-extrabold tracking-tight flex items-center gap-2">
         🛍️ Productos Disponibles
       </h2>
+
+      <div className="mt-2 text-gray-300 pb-4">
+        <label htmlFor="budget" className="block mt-2 text-gray-300">
+          Presupuesto máximo:
+          <input
+            id="budget"
+            type="number"
+            value={budget}
+            onChange={handleBudgetChange}
+            placeholder="0"
+            min={0}
+            className="
+          ml-2
+          w-24
+          rounded
+          bg-gray-700 bg-opacity-50
+          text-white
+          placeholder-gray-400
+          px-3 py-1
+          border border-gray-600
+          focus:outline-none focus:ring-2 focus:ring-blue-500
+          transition
+          duration-200
+          disabled:cursor-not-allowed disabled:bg-gray-600
+        "
+          />
+        </label>
+        <p className="mt-1 text-sm text-gray-400">
+          Presupuesto restante: ${remainingBudget.toFixed(2)}
+        </p>
+      </div>
 
       {/* Lista de productos */}
       {loading ? (
         <ProductCardSkeleton count={6} />
       ) : (
-        <div className="overflow-y-auto pr-1 scroll-thin h-[calc(100%-80px)]">
+        <div className="flex-1 overflow-y-auto pr-1 scroll-thin">
           <ProductList
-            products={products}
-            onAddToCart={handleAddToCartAndOpen}
+            products={filteredProducts}
+            allProducts={products}
+            onAddToCart={(id, price) => handleAddToCartAndOpen(id, price)}
+            disabledChecker={(price) => price > remainingBudget}
           />
         </div>
       )}
 
       {/* Drawer del carrito */}
-
       <CartDrawer
         isCartOpen={isCartOpen}
         setIsCartOpen={setIsCartOpen}

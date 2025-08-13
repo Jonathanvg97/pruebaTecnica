@@ -28,7 +28,7 @@ body {
 /* Scrollbar general */
 .scroll-thin {
   scrollbar-width: thin; /* Firefox */
-  scrollbar-color: #05064d transparent; /* Firefox */
+  scrollbar-color: #181a91 transparent; /* Firefox */
 }
 
 /* Scrollbar en Webkit (Chrome, Edge, Safari) */
@@ -41,7 +41,7 @@ body {
 }
 
 .scroll-thin::-webkit-scrollbar-thumb {
-  background-color: #2d0370;
+  background-color: #3e1186;
   border-radius: 9999px;
 }
 

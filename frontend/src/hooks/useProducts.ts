@@ -63,6 +63,11 @@ export const useProducts = () => {
     }
   };
 
+  const clearCart = () => {
+    cart.forEach((cart) => {
+      handleDeleteProductFromCart(cart.id);
+    });
+  };
   return {
     loading,
     loadingCart,
@@ -72,5 +77,6 @@ export const useProducts = () => {
     getAllProductsCart,
     handleAddToCart,
     handleDeleteProductFromCart,
+    clearCart,
   };
 };
